@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "27086041617",
+    "project_id": "movieappdemo-b6346",
+    "storage_bucket": "movieappdemo-b6346.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27086041617:android:5d9c634495525610a9b7b0",
+        "android_client_info": {
+          "package_name": "com.example.animatesplash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpLAaNW3kWNUbWGN4CH300Nx3s5y2Vrnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
