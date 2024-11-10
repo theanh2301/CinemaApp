@@ -1,5 +1,6 @@
 package com.example.animatesplash.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -18,7 +22,9 @@ import com.example.animatesplash.Adapter.FilmListAdapter;
 import com.example.animatesplash.Adapter.SlidersAdapter;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.Domains.SliderItems;
+import com.example.animatesplash.R;
 import com.example.animatesplash.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +59,35 @@ public class MainActivity extends AppCompatActivity {
         initBanner();
         initTopMoving();
         initUpcoming();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.explorer);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+            if (id == R.id.explorer) {
+                return true;
+            } else if (id == R.id.favorite) {
+                startActivity(new Intent(getApplicationContext(), FavoriteActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }   else if (id == R.id.download) {
+                startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }   else if (id == R.id.profile) {
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+
 
     }
 
@@ -111,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
     private void initBanner() {
