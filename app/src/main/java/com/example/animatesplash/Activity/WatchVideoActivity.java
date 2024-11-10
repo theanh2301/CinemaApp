@@ -14,18 +14,18 @@ import com.example.animatesplash.R;
 import java.util.ArrayList;
 
 public class WatchVideoActivity extends AppCompatActivity {
-
+/*
     private RecyclerView recyclerView;
     private VideoItemAdapter videoItemAdapter;
     private ArrayList<VideoItem> itemList;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId")*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_watch_video);
 
-        recyclerView = findViewById(R.id.recyclerViewVideo);
+       /* recyclerView = findViewById(R.id.recyclerViewVideo);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         itemList = new ArrayList<>();
@@ -38,6 +38,6 @@ public class WatchVideoActivity extends AppCompatActivity {
 
         videoItemAdapter = new VideoItemAdapter(itemList);
         recyclerView.setAdapter(videoItemAdapter);
-
+*/
     }
 }

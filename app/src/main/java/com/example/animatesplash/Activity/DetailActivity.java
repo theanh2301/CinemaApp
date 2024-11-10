@@ -59,23 +59,13 @@ public class DetailActivity extends AppCompatActivity {
         binding.movieTimeTxt.setText(item.getYear() + " - " + item.getTime());
         binding.movieSumery.setText(item.getDescription());
 
-        binding.watchTrailerBtn.setOnClickListener(view -> startActivity(new Intent(DetailActivity.this, WatchVideoActivity.class)));
-
         binding.watchTrailerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(DetailActivity.this, WatchVideoActivity.class);
                 startActivity(intent);
 
-                /*String id = item.getTrailer().replace("https://www.youtube.com", "");
-                Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
-                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getTrailer()));
-
-                try {
-                    startActivity(appIntent);
-                } catch (ActivityNotFoundException ex) {
-                    startActivity(webIntent);
-                }*/
             }
         });
 
