@@ -17,7 +17,8 @@
             android:id="@+id/imageView3"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:src="@drawable/cloud"
+            android:src="@drawable/snake2"
+            android:background="@drawable/blur_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +47,7 @@
             app:layout_constraintStart_toStartOf="@+id/ring_bg"
             app:layout_constraintTop_toTopOf="@+id/ring_bg"
             app:shapeAppearanceOverlay="@style/roundedImageRounded"
-            app:srcCompat="@drawable/spider" />
+            app:srcCompat="@drawable/avata" />
 
         <TextView
             android:id="@+id/textView4"
