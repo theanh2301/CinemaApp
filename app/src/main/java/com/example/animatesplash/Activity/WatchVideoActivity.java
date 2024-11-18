@@ -1,43 +1,96 @@
 package com.example.animatesplash.Activity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.animatesplash.Adapter.VideoItemAdapter;
-import com.example.animatesplash.Domains.VideoItem;
-import com.example.animatesplash.R;
+import com.example.animatesplash.Adapter.FilmListAdapter;
+import com.example.animatesplash.Domains.Film;
+import com.example.animatesplash.databinding.ActivityWatchVideoBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class WatchVideoActivity extends AppCompatActivity {
-/*
-    private RecyclerView recyclerView;
-    private VideoItemAdapter videoItemAdapter;
-    private ArrayList<VideoItem> itemList;
 
-    @SuppressLint("MissingInflatedId")*/
+    ActivityWatchVideoBinding binding;
+    private FirebaseDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_watch_video);
+        binding = ActivityWatchVideoBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-       /* recyclerView = findViewById(R.id.recyclerViewVideo);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.back.setOnClickListener(v -> finish());
 
-        itemList = new ArrayList<>();
-        itemList.add(new VideoItem("title1", "year - time", "0", "icon"));
-        itemList.add(new VideoItem("title2", "year - time", "1", "logo1"));
-        itemList.add(new VideoItem("title3", "year - time", "2", "logo2"));
-        itemList.add(new VideoItem("title4", "year - time", "3", "img3"));
-        itemList.add(new VideoItem("title5", "year - time", "4", "img2"));
-        itemList.add(new VideoItem("title0", "year - time", "5", "img1"));
+        database = FirebaseDatabase.getInstance();
 
-        videoItemAdapter = new VideoItemAdapter(itemList);
-        recyclerView.setAdapter(videoItemAdapter);
-*/
+        initTopMoving();
+        initUpcoming();
     }
+
+    private void initUpcoming(){
+        DatabaseReference myRef = database.getReference("Upcomming");
+        binding.progressBarUpcoming.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(WatchVideoActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewUpcoming.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarUpcoming.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initTopMoving(){
+        DatabaseReference myRef = database.getReference("Items");
+        binding.progressBar3.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewTopMovie.setLayoutManager(new LinearLayoutManager(WatchVideoActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewTopMovie.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBar3.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

@@ -23,6 +23,7 @@ public class Activity_Splash_Login extends AppCompatActivity {
         loginBtn.setOnClickListener(view -> startActivity(new Intent(Activity_Splash_Login.this, IntroActivity.class)));
 
         initView();
+        navigateToIntro();
     }
 
     private void initView(){
@@ -39,5 +40,12 @@ public class Activity_Splash_Login extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void navigateToIntro() {
+        Intent intent = new Intent(Activity_Splash_Login.this, IntroActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
