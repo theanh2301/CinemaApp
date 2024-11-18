@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AnimateSplash"
         tools:targetApi="31">
+
         <activity
             android:name=".Activity.ProfileActivity"
             android:exported="false"
@@ -35,7 +38,10 @@
             android:name=".Activity.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait">
-            
+            <intent-filter>
+                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".Activity.IntroActivity"

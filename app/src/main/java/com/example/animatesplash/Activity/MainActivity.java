@@ -3,15 +3,17 @@ package com.example.animatesplash.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -32,8 +34,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_VOICE_INPUT = 100;
+    private EditText searchEditText;
+    private ImageView micButton;
     ActivityMainBinding binding;
     private FirebaseDatabase database;
     private Handler sliderHandler = new Handler();
@@ -49,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        searchEditText = findViewById(R.id.searchEditText);
+        micButton = findViewById(R.id.micButton);
+
+        micButton.setOnClickListener(v -> startVoiceInput());
 
         database = FirebaseDatabase.getInstance();
 
@@ -87,6 +99,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void startVoiceInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+        try {
+            startActivityForResult(intent, REQUEST_CODE_VOICE_INPUT);
+        } catch (Exception e) {
+            Toast.makeText(this, "Thiết bị của bạn không hỗ trợ nhập giọng nói!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_VOICE_INPUT && resultCode == RESULT_OK && data != null) {
+            ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (results != null && !results.isEmpty()) {
+                searchEditText.setText(results.get(0));
+            }
+        }
     }
 
     private void initUpcoming(){
