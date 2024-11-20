@@ -1,14 +1,15 @@
 package com.example.animatesplash.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,13 +39,13 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_VOICE_INPUT = 100;
-    private EditText searchEditText;
-    private ImageView micButton;
+    private FilmListAdapter filmListAdapter;
+    private static final int REQUEST_CODE_VOICE_INPUT = 1;
+    private final ArrayList<Film> movieList = new ArrayList<>();
     ActivityMainBinding binding;
     private FirebaseDatabase database;
-    private Handler sliderHandler = new Handler();
-    private Runnable sliderRunnable = new Runnable() {
+    private final Handler sliderHandler = new Handler();
+    private final Runnable sliderRunnable = new Runnable() {
         @Override
         public void run() {
             binding.viewPager2.setCurrentItem(binding.viewPager2.getCurrentItem() + 1);
@@ -57,10 +58,25 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        searchEditText = findViewById(R.id.searchEditText);
-        micButton = findViewById(R.id.micButton);
+        binding.movieRecyclerView.setVisibility(View.GONE);
 
-        micButton.setOnClickListener(v -> startVoiceInput());
+        filmListAdapter = new FilmListAdapter(movieList);
+        binding.movieRecyclerView.setAdapter(filmListAdapter);
+
+        binding.searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchMovies(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        binding.micButton.setOnClickListener(v -> startVoiceInput());
 
         database = FirebaseDatabase.getInstance();
 
@@ -75,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.explorer);
         bottomNavigationView.setOnItemSelectedListener(item -> {
-
             int id = item.getItemId();
             if (id == R.id.explorer) {
                 return true;
@@ -84,12 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
-            }   else if (id == R.id.download) {
+            } else if (id == R.id.download) {
                 startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
-            }   else if (id == R.id.profile) {
+            } else if (id == R.id.profile) {
                 startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
@@ -112,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Thiết bị của bạn không hỗ trợ nhập giọng nói!", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -119,10 +135,79 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_VOICE_INPUT && resultCode == RESULT_OK && data != null) {
             ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (results != null && !results.isEmpty()) {
-                searchEditText.setText(results.get(0));
+                binding.searchEditText.setText(results.get(0));
             }
         }
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void searchMovies(String query) {
+        DatabaseReference databaseReference = database.getReference("Items");
+        if (query.isEmpty()) {
+            movieList.clear();
+            filmListAdapter.notifyDataSetChanged();
+            binding.movieRecyclerView.setVisibility(View.GONE);
+            return;
+        }
+        //ArrayList<Film> items = new ArrayList<>();
+        databaseReference.orderByChild("Title").startAt(query).endAt(query + "\uf8ff")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        movieList.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Film film = snapshot.getValue(Film.class);
+                            if (film != null) {
+                                movieList.add(film);
+                            }
+                        }
+
+                        if (movieList.isEmpty()) {
+                            binding.movieRecyclerView.setVisibility(View.GONE);
+                            Toast.makeText(MainActivity.this, "Không tìm thấy phim nào.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.movieRecyclerView.setVisibility(View.VISIBLE);
+                        }
+                        filmListAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(MainActivity.this, "Lỗi khi lấy dữ liệu!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    /*private void searchMovies(String query) {
+        DatabaseReference databaseReference = database.getReference("Items");
+        if (query.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập tên phim để tìm kiếm", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        databaseReference.orderByChild("Title").startAt(query).endAt(query + "\uf8ff")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            StringBuilder results = new StringBuilder("Kết quả:\n");
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String name = snapshot.child("Title").getValue(String.class);
+                                Integer year = snapshot.child("Year").getValue(Integer.class);
+                                results.append("- ").append(name).append(" (").append(year).append(")\n");
+                            }
+                            Toast.makeText(MainActivity.this, results.toString(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Không tìm thấy phim.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(MainActivity.this, "Lỗi khi tìm kiếm dữ liệu!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }*/
 
     private void initUpcoming(){
         DatabaseReference myRef = database.getReference("Upcomming");
@@ -179,9 +264,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
     private void initBanner() {
         DatabaseReference myRef = database.getReference("Banners");

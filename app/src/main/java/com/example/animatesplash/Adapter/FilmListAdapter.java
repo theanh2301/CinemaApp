@@ -55,6 +55,7 @@ public class FilmListAdapter extends RecyclerView.Adapter<FilmListAdapter.ViewHo
             context.startActivity(intent);
 
         });
+
     }
 
     @Override

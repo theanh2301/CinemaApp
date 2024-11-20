@@ -12,39 +12,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.animatesplash.R;
 
 public class Activity_Splash_Login extends AppCompatActivity {
-    private EditText userTxt, passwordTxt;
-    private Button loginBtn;
+
+    private Button register;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_login);
 
-        loginBtn = findViewById(R.id.loginBtn);
-        loginBtn.setOnClickListener(view -> startActivity(new Intent(Activity_Splash_Login.this, IntroActivity.class)));
-
-        initView();
-        navigateToIntro();
-    }
-
-    private void initView(){
-        userTxt = findViewById(R.id.userTxt);
-        passwordTxt = findViewById(R.id.passTxt);
-        loginBtn = findViewById(R.id.loginBtn);
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        register = findViewById(R.id.register);
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (userTxt.getText().toString().isEmpty() || passwordTxt.getText().toString().isEmpty()) {
-                    Toast.makeText(Activity_Splash_Login.this, "Please fill your username and password", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(Activity_Splash_Login.this, IntroActivity.class));
-                }
+            public void onClick(View v) {
+                navigateToIntro();
             }
         });
+
+
 
     }
 
     private void navigateToIntro() {
-        Intent intent = new Intent(Activity_Splash_Login.this, IntroActivity.class);
+        Intent intent = new Intent(Activity_Splash_Login.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
