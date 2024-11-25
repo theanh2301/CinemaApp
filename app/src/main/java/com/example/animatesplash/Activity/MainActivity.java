@@ -143,71 +143,49 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void searchMovies(String query) {
         DatabaseReference databaseReference = database.getReference("Items");
-        if (query.isEmpty()) {
+
+        // Nếu không có từ khóa, xóa danh sách và ẩn RecyclerView
+        if (query.trim().isEmpty()) {
             movieList.clear();
             filmListAdapter.notifyDataSetChanged();
             binding.movieRecyclerView.setVisibility(View.GONE);
             return;
         }
-        //ArrayList<Film> items = new ArrayList<>();
-        databaseReference.orderByChild("Title").startAt(query).endAt(query + "\uf8ff")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        movieList.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Film film = snapshot.getValue(Film.class);
-                            if (film != null) {
-                                movieList.add(film);
+
+        // Thêm thời gian chờ (debounce) để giảm số lần gọi Firebase
+        new Handler().postDelayed(() -> {
+            databaseReference.orderByChild("Title")
+                    .startAt(query)
+                    .endAt(query + "\uf8ff")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            movieList.clear();
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Film film = snapshot.getValue(Film.class);
+                                if (film != null) {
+                                    movieList.add(film);
+                                }
                             }
+
+                            if (movieList.isEmpty()) {
+                                binding.movieRecyclerView.setVisibility(View.GONE);
+                                Toast.makeText(MainActivity.this, "Không tìm thấy phim nào khớp với từ khóa.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                binding.movieRecyclerView.setVisibility(View.VISIBLE);
+                            }
+                            filmListAdapter.notifyDataSetChanged();
                         }
 
-                        if (movieList.isEmpty()) {
-                            binding.movieRecyclerView.setVisibility(View.GONE);
-                            Toast.makeText(MainActivity.this, "Không tìm thấy phim nào.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            binding.movieRecyclerView.setVisibility(View.VISIBLE);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(MainActivity.this, "Lỗi khi lấy dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                        filmListAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(MainActivity.this, "Lỗi khi lấy dữ liệu!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+        }, 500); // Đợi 300ms trước khi thực hiện tìm kiếm
     }
 
-    /*private void searchMovies(String query) {
-        DatabaseReference databaseReference = database.getReference("Items");
-        if (query.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập tên phim để tìm kiếm", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        databaseReference.orderByChild("Title").startAt(query).endAt(query + "\uf8ff")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            StringBuilder results = new StringBuilder("Kết quả:\n");
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                String name = snapshot.child("Title").getValue(String.class);
-                                Integer year = snapshot.child("Year").getValue(Integer.class);
-                                results.append("- ").append(name).append(" (").append(year).append(")\n");
-                            }
-                            Toast.makeText(MainActivity.this, results.toString(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Không tìm thấy phim.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(MainActivity.this, "Lỗi khi tìm kiếm dữ liệu!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }*/
 
     private void initUpcoming(){
         DatabaseReference myRef = database.getReference("Upcomming");

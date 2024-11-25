@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "27086041617",
-    "project_id": "movieappdemo-b6346",
-    "storage_bucket": "movieappdemo-b6346.appspot.com"
+    "project_number": "352558673632",
+    "project_id": "tomorrow-cinema",
+    "storage_bucket": "tomorrow-cinema.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:27086041617:android:5d9c634495525610a9b7b0",
+        "mobilesdk_app_id": "1:352558673632:android:62786600ade368ad192a85",
         "android_client_info": {
           "package_name": "com.example.animatesplash"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBpLAaNW3kWNUbWGN4CH300Nx3s5y2Vrnw"
+          "current_key": "AIzaSyCHrIcK9qDI7uyGJv4wABP7G-gR3tN3Epc"
         }
       ],
       "services": {

@@ -1,8 +1,11 @@
 package com.example.animatesplash.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -46,6 +49,7 @@ public class WatchVideoActivity extends AppCompatActivity {
         setVariable();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setVariable() {
         Film item = (Film) getIntent().getSerializableExtra("FILM_OBJECT");
 
@@ -72,20 +76,86 @@ public class WatchVideoActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(shareIntent, "Share via"));
         });
 
-
-
         VideoView videoView = findViewById(R.id.videoView);
+        Handler handler = new Handler();
 
-        MediaController mediaController = new MediaController(this);
-        mediaController.setAnchorView(videoView);
+        Runnable hideControlButtons = () -> {
+            binding.pauseBtn.setVisibility(View.GONE);
+            binding.forward.setVisibility(View.GONE);
+            binding.replay.setVisibility(View.GONE);
+        };
 
         Uri videoUrl = Uri.parse(item.getTrailer());
-        videoView.setMediaController(mediaController);
         videoView.setVideoURI(videoUrl);
         videoView.requestFocus();
 
-        videoView.start();
+        videoView.setOnPreparedListener(mp -> {
+            binding.progressBarVideo.setVisibility(View.GONE);
+            videoView.start();
+            binding.playBtn.setVisibility(View.GONE);
+            binding.pauseBtn.setVisibility(View.VISIBLE);
+            binding.forward.setVisibility(View.VISIBLE);
+            binding.replay.setVisibility(View.VISIBLE);
+            handler.postDelayed(hideControlButtons, 3000);
+        });
+
+        binding.playBtn.setOnClickListener(v -> {
+            videoView.start();
+            binding.playBtn.setVisibility(View.GONE);
+            binding.pauseBtn.setVisibility(View.VISIBLE);
+            binding.forward.setVisibility(View.VISIBLE);
+            binding.replay.setVisibility(View.VISIBLE);
+            handler.postDelayed(hideControlButtons, 3000);
+        });
+
+        binding.pauseBtn.setOnClickListener(v -> {
+            videoView.pause();
+            binding.playBtn.setVisibility(View.VISIBLE);
+            binding.pauseBtn.setVisibility(View.GONE);
+            binding.forward.setVisibility(View.VISIBLE);
+            binding.replay.setVisibility(View.VISIBLE);
+            handler.removeCallbacks(hideControlButtons);
+        });
+
+        videoView.setOnCompletionListener(mp -> {
+            binding.playBtn.setVisibility(View.VISIBLE);
+            binding.pauseBtn.setVisibility(View.GONE);
+            binding.forward.setVisibility(View.GONE);
+            binding.replay.setVisibility(View.GONE);
+            handler.removeCallbacks(hideControlButtons);
+        });
+
+        videoView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                binding.pauseBtn.setVisibility(View.VISIBLE);
+                binding.forward.setVisibility(View.VISIBLE);
+                binding.replay.setVisibility(View.VISIBLE);
+                handler.removeCallbacks(hideControlButtons);
+                handler.postDelayed(hideControlButtons, 3000);
+            }
+            return false;
+        });
+
+        binding.forward.setOnClickListener(v -> {
+            int currentPosition = videoView.getCurrentPosition();
+            int duration = videoView.getDuration();
+            int newPosition = Math.min(currentPosition + 10000, duration);
+            videoView.seekTo(newPosition);
+            handler.removeCallbacks(hideControlButtons);
+            handler.postDelayed(hideControlButtons, 3000);
+        });
+
+        binding.replay.setOnClickListener(v -> {
+            int currentPosition = videoView.getCurrentPosition();
+            int newPosition = Math.max(currentPosition - 10000, 0);
+            videoView.seekTo(newPosition);
+            handler.removeCallbacks(hideControlButtons);
+            handler.postDelayed(hideControlButtons, 3000);
+        });
+
+
     }
+
 
     private void initUpcoming(){
         DatabaseReference myRef = database.getReference("Upcomming");
