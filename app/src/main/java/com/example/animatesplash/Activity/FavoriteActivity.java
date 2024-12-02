@@ -1,31 +1,19 @@
 package com.example.animatesplash.Activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.widget.MediaController;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.animatesplash.Adapter.CastListAdapter;
-import com.example.animatesplash.Adapter.CategoryEachFilmAdapter;
 import com.example.animatesplash.Adapter.FavoriteAdapter;
-import com.example.animatesplash.Adapter.FilmListAdapter;
 import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
-import com.example.animatesplash.databinding.ActivityDetailBinding;
 import com.example.animatesplash.databinding.ActivityFavoriteBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteActivity extends AppCompatActivity {
@@ -42,7 +30,7 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
-        bottomNavigationView.setSelectedItemId(R.id.explorer);
+        bottomNavigationView.setSelectedItemId(R.id.favorite);
         bottomNavigationView.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -54,7 +42,7 @@ public class FavoriteActivity extends AppCompatActivity {
             } else if (id == R.id.favorite) {
                 return true;
             }   else if (id == R.id.shortVideo) {
-                startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
+                startActivity(new Intent(getApplicationContext(), ShortVideoActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;

@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.shortVideo) {
-                startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
+                startActivity(new Intent(getApplicationContext(), ShortVideoActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Lỗi khi lấy dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-        }, 500); // Đợi 300ms trước khi thực hiện tìm kiếm
+        }, 500);
     }
 
 

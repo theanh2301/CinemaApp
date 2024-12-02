@@ -3,11 +3,7 @@ package com.example.animatesplash.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.animatesplash.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,7 +16,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
-        bottomNavigationView.setSelectedItemId(R.id.explorer);
+        bottomNavigationView.setSelectedItemId(R.id.profile);
         bottomNavigationView.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -35,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 return true;
             }   else if (id == R.id.shortVideo) {
-                startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
+                startActivity(new Intent(getApplicationContext(), ShortVideoActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;

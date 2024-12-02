@@ -23,7 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.animatesplash.Adapter.CastListAdapter;
 import com.example.animatesplash.Adapter.CategoryEachFilmAdapter;
-import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.databinding.ActivityDetailBinding;
 
@@ -169,7 +168,7 @@ public class DetailActivity extends AppCompatActivity {
                     }
 
                     // Chuyển sang DownloadActivity để hiển thị danh sách video đã tải
-                    Intent intent = new Intent(DetailActivity.this, DownloadActivity.class);
+                    Intent intent = new Intent(DetailActivity.this, ShortVideoActivity.class);
                     startActivity(intent);
                 } else {
                     // Nếu URL không hợp lệ, hiển thị thông báo lỗi

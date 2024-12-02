@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.animatesplash.Adapter.VideoAdapter;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
-import com.example.animatesplash.databinding.ActivityDownloadBinding;
+import com.example.animatesplash.databinding.ActivityShortVideoBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,20 +21,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadActivity extends AppCompatActivity {
+public class ShortVideoActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
-    ActivityDownloadBinding binding;
+    ActivityShortVideoBinding binding;
     private List<Film> videoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityDownloadBinding.inflate(getLayoutInflater());
+        binding = ActivityShortVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
-        bottomNavigationView.setSelectedItemId(R.id.explorer);
+        bottomNavigationView.setSelectedItemId(R.id.shortVideo);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.explorer) {
