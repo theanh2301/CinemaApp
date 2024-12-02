@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -57,7 +56,6 @@ public class WatchVideoActivity extends AppCompatActivity {
         binding.imbdTxt.setText("IMBD " + item.getImbd());
         binding.movieTimeTxt.setText(item.getYear() + " - " + item.getTime());
         binding.movieSumery.setText(item.getDescription());
-
 
         if (item.getGenre() != null) {
             binding.genreView.setAdapter(new CategoryEachFilmAdapter(item.getGenre()));
@@ -182,7 +180,7 @@ public class WatchVideoActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });   
     }
 
     private void initTopMoving(){

@@ -21,9 +21,10 @@ import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FilmListAdapter extends RecyclerView.Adapter<FilmListAdapter.ViewHolder> {
-    ArrayList<Film> items;
+    List<Film> items;
     Context context;
 
     public FilmListAdapter(ArrayList<Film> items) {

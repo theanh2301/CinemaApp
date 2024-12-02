@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
-            }   else if (id == R.id.download) {
+            }   else if (id == R.id.shortVideo) {
                 startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();

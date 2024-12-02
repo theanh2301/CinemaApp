@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.animatesplash"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -52,5 +53,5 @@ dependencies {
     implementation("com.github.Dimezis:BlurView:version-2.0.3")
     implementation("com.makeramen:roundedimageview:2.3.0")
     implementation("com.google.android.material:material:1.12.0")
-
+    implementation("com.google.code.gson:gson:2.9.0")
 }

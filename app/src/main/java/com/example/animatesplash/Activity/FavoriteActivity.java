@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,19 +16,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.animatesplash.Adapter.CastListAdapter;
 import com.example.animatesplash.Adapter.CategoryEachFilmAdapter;
+import com.example.animatesplash.Adapter.FavoriteAdapter;
+import com.example.animatesplash.Adapter.FilmListAdapter;
+import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
+import com.example.animatesplash.databinding.ActivityDetailBinding;
 import com.example.animatesplash.databinding.ActivityFavoriteBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FavoriteActivity extends AppCompatActivity {
 
     ActivityFavoriteBinding binding;
+    private List<Film> favoriteMovies;
+    private FavoriteAdapter favoriteAdapter;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
+        binding = ActivityFavoriteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.explorer);
@@ -41,7 +53,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 return true;
             } else if (id == R.id.favorite) {
                 return true;
-            }   else if (id == R.id.download) {
+            }   else if (id == R.id.shortVideo) {
                 startActivity(new Intent(getApplicationContext(), DownloadActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
@@ -55,34 +67,29 @@ public class FavoriteActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // Khởi tạo DatabaseHelper
+        databaseHelper = new DatabaseHelper(this);
+
+        // Cấu hình RecyclerView
+        setupRecyclerView();
+
+        // Lấy và hiển thị danh sách phim yêu thích
+        loadFavoriteMovies();
     }
 
-   /*private void setVariable() {
-        Film item = (Film) getIntent().getSerializableExtra("FILM_OBJECT");
+    private void setupRecyclerView() {
+        binding.favRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        binding.titleTxt.setText(item.getTitle());
-        binding.imbdTxt.setText("IMBD " + item.getImbd());
-        binding.movieTimeTxt.setText(item.getYear() + " - " + item.getTime());
-        binding.movieSumery.setText(item.getDescription());
-
-
-
-        if (item.getGenre() != null) {
-            binding.genreView.setAdapter(new CategoryEachFilmAdapter(item.getGenre()));
-            binding.genreView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    private void loadFavoriteMovies() {
+        List<Film> favoriteMovies = databaseHelper.getAllFavorites();
+        if (favoriteMovies.isEmpty()) {
+            Toast.makeText(this, "No favorite movies found!", Toast.LENGTH_SHORT).show();
         }
 
-        if (item.getCasts() != null) {
-            binding.CastView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-            binding.CastView.setAdapter(new CastListAdapter(item.getCasts()));
-        }
-
-        binding.share.setOnClickListener(v -> {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this movie: " + getTitle());
-            startActivity(Intent.createChooser(shareIntent, "Share via"));
-        });
-
-    }*/
+        // Gắn danh sách vào adapter
+        favoriteAdapter = new FavoriteAdapter(favoriteMovies);
+        binding.favRecyclerView.setAdapter(favoriteAdapter);
+    }
 }
