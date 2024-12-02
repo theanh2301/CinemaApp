@@ -16,6 +16,17 @@ public class Film implements Serializable {
 
     public Film(){}
 
+    public Film(String title, String description, String poster, String time, String trailer, int imbd, int year, ArrayList<String> genre) {
+        this.Title = title;
+        this.Description = description;
+        this.Poster = poster;
+        this.Time = time;
+        this.Trailer = trailer;
+        this.Imbd = imbd;
+        this.Year = year;
+        this.Genre = genre;
+    }
+
     public String getTitle() {
         return Title;
     }

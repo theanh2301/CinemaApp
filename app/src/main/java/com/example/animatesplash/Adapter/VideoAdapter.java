@@ -1,5 +1,7 @@
 package com.example.animatesplash.Adapter;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -7,13 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.animatesplash.Activity.DetailActivity;
+import com.example.animatesplash.Activity.FavoriteActivity;
+import com.example.animatesplash.Activity.ShortVideoActivity;
 import com.example.animatesplash.Activity.WatchVideoActivity;
+import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
 
@@ -52,6 +60,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         VideoView videoView;
         TextView title, movieTimeTxt, imbd;
         Button watchBtn;
+        ImageView share, fav;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +69,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             movieTimeTxt = itemView.findViewById(R.id.movieTimeTxt);
             imbd = itemView.findViewById(R.id.imbdTxt);
             watchBtn = itemView.findViewById(R.id.watchTrailerBtn);
+            share = itemView.findViewById(R.id.share);
+            fav = itemView.findViewById(R.id.fav);
         }
 
         public void setVideoData(Film video){
@@ -67,6 +78,39 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             movieTimeTxt.setText(video.getYear() + " - " + video.getTime());
             imbd.setText("IMBD " + video.getImbd());
             videoView.setVideoPath(video.getTrailer());
+
+            share.setOnClickListener(v -> {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this movie: " + video.getTitle());
+                context.startActivity(Intent.createChooser(shareIntent, "Share via"));
+            });
+
+            fav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isLiked = false;
+
+                    isLiked = !isLiked;
+
+                    if (isLiked) {
+                        fav.setImageResource(R.drawable.btn_21);
+                    } else {
+                        fav.setImageResource(R.drawable.btn_2);
+                    }
+
+                    ObjectAnimator scaleDown = ObjectAnimator.ofPropertyValuesHolder(
+                            fav,
+                            PropertyValuesHolder.ofFloat("scaleX", 0.8f),
+                            PropertyValuesHolder.ofFloat("scaleY", 0.8f));
+                    scaleDown.setDuration(150);
+
+                    scaleDown.setRepeatCount(1);
+                    scaleDown.setRepeatMode(ObjectAnimator.REVERSE);
+
+                    scaleDown.start();
+                }
+            });
 
             watchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

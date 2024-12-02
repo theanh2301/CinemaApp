@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.animatesplash.Adapter.CastListAdapter;
 import com.example.animatesplash.Adapter.CategoryEachFilmAdapter;
+import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.databinding.ActivityDetailBinding;
 
@@ -104,57 +105,52 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-       /* binding.fav.setOnClickListener(new View.OnClickListener() {
+        binding.fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Khởi tạo đối tượng DatabaseHelper
-                DatabaseHelper databaseHelper = new DatabaseHelper(DetailActivity.this);
 
-                // Lưu thông tin phim vào SQLite
-                boolean isInserted = databaseHelper.addFavorite(
+                Film film = new Film(
                         item.getTitle(),
                         item.getDescription(),
                         item.getPoster(),
                         item.getTime(),
                         item.getTrailer(),
                         item.getImbd(),
-                        item.getYear()
+                        item.getYear(),
+                        item.getGenre()
                 );
+
+                DatabaseHelper databaseHelper = new DatabaseHelper(DetailActivity.this);
+
+                boolean isInserted = databaseHelper.addFavorite(film);
 
                 if (isInserted) {
                     Toast.makeText(DetailActivity.this, "Added to Favorites", Toast.LENGTH_SHORT).show();
 
-                    // Chuyển sang FavoriteActivity
                     Intent intent = new Intent(DetailActivity.this, FavoriteActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(DetailActivity.this, "Failed to Add to Favorites", Toast.LENGTH_SHORT).show();
                 }
             }
-        });*/
-
-
+        });
 
         binding.downloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Kiểm tra nếu đối tượng Film (item) hợp lệ
                 if (item != null && item.getTrailer() != null) {
-                    // Hiển thị thông báo bắt đầu tải
                     Toast.makeText(DetailActivity.this, "Downloading " + item.getTitle(), Toast.LENGTH_SHORT).show();
 
-                    // Tiến hành tải video về thiết bị
                     String videoUrl = item.getTrailer();
                     String fileName = item.getTitle() + ".mp4";
                     File downloadDirectory = new File(getExternalFilesDir(null), "Downloads");
 
                     if (!downloadDirectory.exists()) {
-                        downloadDirectory.mkdir(); // Tạo thư mục nếu chưa tồn tại
+                        downloadDirectory.mkdir();
                     }
 
                     File destinationFile = new File(downloadDirectory, fileName);
 
-                    // Sử dụng DownloadManager để tải video
                     DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                     Uri uri = Uri.parse(videoUrl);
                     DownloadManager.Request request = new DownloadManager.Request(uri)
@@ -164,14 +160,10 @@ public class DetailActivity extends AppCompatActivity {
                             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
                     if (downloadManager != null) {
-                        downloadManager.enqueue(request); // Thêm yêu cầu vào hàng đợi
+                        downloadManager.enqueue(request);
                     }
 
-                    // Chuyển sang DownloadActivity để hiển thị danh sách video đã tải
-                    Intent intent = new Intent(DetailActivity.this, ShortVideoActivity.class);
-                    startActivity(intent);
                 } else {
-                    // Nếu URL không hợp lệ, hiển thị thông báo lỗi
                     Toast.makeText(DetailActivity.this, "Unable to download video. URL is invalid.", Toast.LENGTH_SHORT).show();
                 }
             }

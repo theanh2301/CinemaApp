@@ -56,13 +56,10 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
-        // Khởi tạo DatabaseHelper
         databaseHelper = new DatabaseHelper(this);
 
-        // Cấu hình RecyclerView
         setupRecyclerView();
 
-        // Lấy và hiển thị danh sách phim yêu thích
         loadFavoriteMovies();
     }
 
@@ -76,7 +73,6 @@ public class FavoriteActivity extends AppCompatActivity {
             Toast.makeText(this, "No favorite movies found!", Toast.LENGTH_SHORT).show();
         }
 
-        // Gắn danh sách vào adapter
         favoriteAdapter = new FavoriteAdapter(favoriteMovies);
         binding.favRecyclerView.setAdapter(favoriteAdapter);
     }

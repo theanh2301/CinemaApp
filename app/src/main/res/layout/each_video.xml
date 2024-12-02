@@ -64,6 +64,7 @@
         android:layout_weight="1"
         android:text="2024 - 2h 2m"
         android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -78,17 +79,39 @@
         app:layout_constraintBottom_toBottomOf="@+id/movieTimeTxt"
         app:layout_constraintStart_toEndOf="@+id/movieTimeTxt" />
 
+    <ImageView
+        android:id="@+id/fav"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/btn_2" />
+
+    <ImageView
+        android:id="@+id/share"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/share" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/watchTrailerBtn"
         style="@android:style/Widget.Button"
         android:layout_width="55dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/red_bg"
         android:drawableEnd="@drawable/play_circle"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fav"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

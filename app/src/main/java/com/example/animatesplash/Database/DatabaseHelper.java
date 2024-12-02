@@ -103,5 +103,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return favoriteMovies;
     }
+
 }
 

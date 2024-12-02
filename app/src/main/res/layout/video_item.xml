@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/gradient"
+    android:background="@drawable/item_bg"
     android:layout_margin="8dp">
 
     <ImageView
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Tên phim"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/videoPic"
@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textColor="@color/white"
         android:text="year - time"
         app:layout_constraintStart_toEndOf="@+id/videoPic"
         app:layout_constraintTop_toBottomOf="@+id/titleTxt" />
@@ -45,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="IMBD 9"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/timeTxt"
         app:layout_constraintTop_toBottomOf="@+id/timeTxt" />
 

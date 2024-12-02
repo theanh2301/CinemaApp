@@ -1,12 +1,15 @@
 package com.example.animatesplash.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.animatesplash.Adapter.CastListAdapter;
 import com.example.animatesplash.Adapter.CategoryEachFilmAdapter;
 import com.example.animatesplash.Adapter.FilmListAdapter;
+import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
 import com.example.animatesplash.databinding.ActivityWatchVideoBinding;
@@ -25,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class WatchVideoActivity extends AppCompatActivity {
@@ -39,12 +44,10 @@ public class WatchVideoActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.back.setOnClickListener(v -> finish());
-
         database = FirebaseDatabase.getInstance();
 
         initTopMoving();
         initUpcoming();
-
         setVariable();
     }
 
@@ -66,6 +69,71 @@ public class WatchVideoActivity extends AppCompatActivity {
             binding.CastView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
             binding.CastView.setAdapter(new CastListAdapter(item.getCasts()));
         }
+
+        binding.downloadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (item != null && item.getTrailer() != null) {
+
+                    Toast.makeText(WatchVideoActivity.this, "Downloading " + item.getTitle(), Toast.LENGTH_SHORT).show();
+
+                    String videoUrl = item.getTrailer();
+                    String fileName = item.getTitle() + ".mp4";
+                    File downloadDirectory = new File(getExternalFilesDir(null), "Downloads");
+
+                    if (!downloadDirectory.exists()) {
+                        downloadDirectory.mkdir();
+                    }
+
+                    File destinationFile = new File(downloadDirectory, fileName);
+
+                    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    Uri uri = Uri.parse(videoUrl);
+                    DownloadManager.Request request = new DownloadManager.Request(uri)
+                            .setTitle(item.getTitle())
+                            .setDescription("Downloading video...")
+                            .setDestinationUri(Uri.fromFile(destinationFile))
+                            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+                    if (downloadManager != null) {
+                        downloadManager.enqueue(request);
+                    }
+
+                } else {
+                    Toast.makeText(WatchVideoActivity.this, "Unable to download video. URL is invalid.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        binding.fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Film film = new Film(
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getPoster(),
+                        item.getTime(),
+                        item.getTrailer(),
+                        item.getImbd(),
+                        item.getYear(),
+                        item.getGenre()
+                );
+
+                DatabaseHelper databaseHelper = new DatabaseHelper(WatchVideoActivity.this);
+
+                boolean isInserted = databaseHelper.addFavorite(film);
+
+                if (isInserted) {
+                    Toast.makeText(WatchVideoActivity.this, "Added to Favorites", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(WatchVideoActivity.this, FavoriteActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(WatchVideoActivity.this, "Failed to Add to Favorites", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         binding.share.setOnClickListener(v -> {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
