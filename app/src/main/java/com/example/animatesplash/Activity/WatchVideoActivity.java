@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -149,6 +153,7 @@ public class WatchVideoActivity extends AppCompatActivity {
             binding.pauseBtn.setVisibility(View.GONE);
             binding.forward.setVisibility(View.GONE);
             binding.replay.setVisibility(View.GONE);
+            binding.btnFullscreen.setVisibility(View.GONE);
         };
 
         Uri videoUrl = Uri.parse(item.getTrailer());
@@ -162,6 +167,7 @@ public class WatchVideoActivity extends AppCompatActivity {
             binding.pauseBtn.setVisibility(View.VISIBLE);
             binding.forward.setVisibility(View.VISIBLE);
             binding.replay.setVisibility(View.VISIBLE);
+            binding.btnFullscreen.setVisibility(View.VISIBLE);
             handler.postDelayed(hideControlButtons, 3000);
         });
 
@@ -171,6 +177,7 @@ public class WatchVideoActivity extends AppCompatActivity {
             binding.pauseBtn.setVisibility(View.VISIBLE);
             binding.forward.setVisibility(View.VISIBLE);
             binding.replay.setVisibility(View.VISIBLE);
+            binding.btnFullscreen.setVisibility(View.VISIBLE);
             handler.postDelayed(hideControlButtons, 3000);
         });
 
@@ -180,6 +187,7 @@ public class WatchVideoActivity extends AppCompatActivity {
             binding.pauseBtn.setVisibility(View.GONE);
             binding.forward.setVisibility(View.VISIBLE);
             binding.replay.setVisibility(View.VISIBLE);
+            binding.btnFullscreen.setVisibility(View.VISIBLE);
             handler.removeCallbacks(hideControlButtons);
         });
 
@@ -196,6 +204,7 @@ public class WatchVideoActivity extends AppCompatActivity {
                 binding.pauseBtn.setVisibility(View.VISIBLE);
                 binding.forward.setVisibility(View.VISIBLE);
                 binding.replay.setVisibility(View.VISIBLE);
+                binding.btnFullscreen.setVisibility(View.VISIBLE);
                 handler.removeCallbacks(hideControlButtons);
                 handler.postDelayed(hideControlButtons, 3000);
             }
@@ -209,6 +218,7 @@ public class WatchVideoActivity extends AppCompatActivity {
             videoView.seekTo(newPosition);
             handler.removeCallbacks(hideControlButtons);
             handler.postDelayed(hideControlButtons, 3000);
+
         });
 
         binding.replay.setOnClickListener(v -> {
@@ -217,11 +227,23 @@ public class WatchVideoActivity extends AppCompatActivity {
             videoView.seekTo(newPosition);
             handler.removeCallbacks(hideControlButtons);
             handler.postDelayed(hideControlButtons, 3000);
+
         });
 
+        binding.btnFullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentOrientation = getResources().getConfiguration().orientation;
 
+                if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+            }
+        });
+        
     }
-
 
     private void initUpcoming(){
         DatabaseReference myRef = database.getReference("Upcomming");

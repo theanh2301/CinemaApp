@@ -71,11 +71,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:alpha="1"
+        android:layout_marginTop="60dp"
         android:layout_marginLeft="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:gravity="center"
-        android:layout_marginTop="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,17 +86,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Tomorrow Cinema"
+            android:text="Welcome to Tomorrow Cinema"
+            android:textSize="36sp"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="30sp"
             android:textStyle="bold|italic" />
 
-        <ImageView
-            android:id="@+id/imageView6"
+        <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            app:srcCompat="@drawable/intro_logo" />
+            android:layout_height="300dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animategif" />
 
     </LinearLayout>
 
@@ -108,8 +109,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="48dp"
-        android:background="@drawable/red_bg"
-        android:text="Welcome to Tomorrow Cinema"
+        android:background="@drawable/dark_blue_bg"
+        android:text="LET'S GO ....."
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="18dp"

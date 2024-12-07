@@ -54,4 +54,6 @@ dependencies {
     implementation("com.makeramen:roundedimageview:2.3.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.airbnb.android:lottie:6.3.0")
+    implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
 }
