@@ -21,6 +21,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.animatesplash.Adapter.FilmGridAdapter;
 import com.example.animatesplash.Adapter.FilmListAdapter;
 import com.example.animatesplash.Adapter.SlidersAdapter;
 import com.example.animatesplash.Domains.Film;
@@ -80,13 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
 
-        Window w = getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
         initBanner();
         initTopMoving();
         initUpcoming();
+        initNewMovie();
+        initMovie();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.explorer);
@@ -186,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         }, 500);
     }
 
-
     private void initUpcoming(){
         DatabaseReference myRef = database.getReference("Upcomming");
         binding.progressBarUpcoming.setVisibility(View.VISIBLE);
@@ -233,6 +231,62 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     binding.progressBar3.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initNewMovie(){
+        DatabaseReference myRef = database.getReference("NewMovie");
+        binding.progressBarNewMovie.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewNewMovie.setLayoutManager(new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewNewMovie.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarNewMovie.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initMovie() {
+        DatabaseReference myRef = database.getReference("Movie");
+        binding.progressBarMovie.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.gridViewMovie.setLayoutManager(new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.gridViewMovie.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarMovie.setVisibility(View.GONE);
                 }
             }
 

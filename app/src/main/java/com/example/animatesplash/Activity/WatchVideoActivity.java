@@ -52,6 +52,8 @@ public class WatchVideoActivity extends AppCompatActivity {
 
         initTopMoving();
         initUpcoming();
+        initNewMovie();
+
         setVariable();
     }
 
@@ -301,4 +303,31 @@ public class WatchVideoActivity extends AppCompatActivity {
         });
     }
 
+    private void initNewMovie(){
+        DatabaseReference myRef = database.getReference("NewMovie");
+        binding.progressBarNewMovie.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewNewMovie.setLayoutManager(new LinearLayoutManager(WatchVideoActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewNewMovie.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarNewMovie.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

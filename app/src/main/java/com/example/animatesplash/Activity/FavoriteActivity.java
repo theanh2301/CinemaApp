@@ -58,22 +58,24 @@ public class FavoriteActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
 
-        setupRecyclerView();
+        setupGridView();
 
         loadFavoriteMovies();
+
     }
 
-    private void setupRecyclerView() {
-        binding.favRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    private void setupGridView() {
+        binding.gridFavMovie.setNumColumns(2);
     }
 
     private void loadFavoriteMovies() {
         List<Film> favoriteMovies = databaseHelper.getAllFavorites();
         if (favoriteMovies.isEmpty()) {
             Toast.makeText(this, "No favorite movies found!", Toast.LENGTH_SHORT).show();
+        } else {
+            FavoriteAdapter favoriteGridAdapter = new FavoriteAdapter(this, favoriteMovies);
+            binding.gridFavMovie.setAdapter(favoriteGridAdapter);
         }
-
-        favoriteAdapter = new FavoriteAdapter(favoriteMovies);
-        binding.favRecyclerView.setAdapter(favoriteAdapter);
     }
+
 }

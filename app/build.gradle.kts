@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.animatesplash"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,13 +47,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
-    implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.ismaeldivita:chip-navigation-bar:1.4.0")
     implementation("com.github.Dimezis:BlurView:version-2.0.3")
     implementation("com.makeramen:roundedimageview:2.3.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("com.google.code.gson:gson:2.9.0")
-    implementation("com.airbnb.android:lottie:6.3.0")
+    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.airbnb.android:lottie:6.6.1")
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
 }

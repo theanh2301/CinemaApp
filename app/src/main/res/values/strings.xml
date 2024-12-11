@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Tomorrow Cinema</string>
-    <string name="register_button">Don\'t have an account? <b>Register Here</b></string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>
