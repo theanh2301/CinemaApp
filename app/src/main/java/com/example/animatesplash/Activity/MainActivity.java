@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
         initUpcoming();
         initNewMovie();
         initMovie();
+        initAnime();
+        initHorrorMovie();
+        initActionMovie();
+        initVietNamMovie();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.explorer);
@@ -287,6 +291,118 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     binding.progressBarMovie.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initAnime(){
+        DatabaseReference myRef = database.getReference("Anime");
+        binding.progressBarAnime.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewAnime.setLayoutManager(new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewAnime.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarAnime.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initHorrorMovie(){
+        DatabaseReference myRef = database.getReference("Horror");
+        binding.progressBarHorrorMovie.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewHorrorMovie.setLayoutManager(new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewHorrorMovie.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarHorrorMovie.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initActionMovie(){
+        DatabaseReference myRef = database.getReference("Action");
+        binding.progressBarActionMovies.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewActionMovies.setLayoutManager(new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewActionMovies.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarActionMovies.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void initVietNamMovie(){
+        DatabaseReference myRef = database.getReference("Vietnamese");
+        binding.progressBarVietnameseMovies.setVisibility(View.VISIBLE);
+        ArrayList<Film> items = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot issue:snapshot.getChildren()) {
+                        items.add(issue.getValue(Film.class));
+                    }
+                    if (!items.isEmpty()){
+                        binding.recyclerViewVietnameseMovies.setLayoutManager(new LinearLayoutManager(MainActivity.this,
+                                LinearLayoutManager.HORIZONTAL, false));
+                        binding.recyclerViewVietnameseMovies.setAdapter(new FilmListAdapter(items));
+                    }
+
+                    binding.progressBarVietnameseMovies.setVisibility(View.GONE);
                 }
             }
 
