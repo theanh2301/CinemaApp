@@ -37,10 +37,6 @@ import java.util.List;
 
 public class WatchVideoActivity extends AppCompatActivity {
 
-    private static final String BASE_URL = "https://your-api-url.com/";
-
-    private boolean isAllCommentsVisible = false;
-
     ActivityWatchVideoBinding binding;
     private FirebaseDatabase database;
 
@@ -50,7 +46,6 @@ public class WatchVideoActivity extends AppCompatActivity {
         binding = ActivityWatchVideoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.back.setOnClickListener(v -> finish());
         database = FirebaseDatabase.getInstance();
 
         initTopMoving();
@@ -62,6 +57,8 @@ public class WatchVideoActivity extends AppCompatActivity {
         initVietNamMovie();
 
         setVariable();
+
+        binding.back.setOnClickListener(v -> finish());
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -10,7 +10,9 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.animatesplash.Adapter.FilmListAdapter;
 import com.example.animatesplash.Adapter.VideoAdapter;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
@@ -70,7 +72,7 @@ public class ShortVideoActivity extends AppCompatActivity {
     }
 
     private void initUpcoming(){
-        DatabaseReference myRef = database.getReference("Upcomming");
+        DatabaseReference myRef = database.getReference("Horror");
         binding.progressBarShort.setVisibility(View.VISIBLE);
         videoList = new ArrayList<>();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -91,8 +93,9 @@ public class ShortVideoActivity extends AppCompatActivity {
             }
         });
     }
+
     private void initTopMoving(){
-        DatabaseReference myRef = database.getReference("Items");
+        DatabaseReference myRef = database.getReference("Anime");
         binding.progressBarShort.setVisibility(View.VISIBLE);
         videoList = new ArrayList<>();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {

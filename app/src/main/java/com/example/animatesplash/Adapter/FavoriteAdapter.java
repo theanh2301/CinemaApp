@@ -1,6 +1,7 @@
 package com.example.animatesplash.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.animatesplash.Activity.DetailActivity;
+import com.example.animatesplash.Activity.WatchVideoActivity;
 import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
@@ -81,6 +84,14 @@ public class FavoriteAdapter extends BaseAdapter {
             } else {
                 Toast.makeText(context, "Failed to remove", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        holder.imageViewPoster.setOnClickListener(view -> {
+            Intent intent = new Intent(context, WatchVideoActivity.class);
+            intent.putExtra("FILM_OBJECT", favoriteMovies.get(position));
+
+            context.startActivity(intent);
+
         });
 
         return convertView;

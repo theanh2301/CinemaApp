@@ -11,17 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.animatesplash.Activity.DetailActivity;
-import com.example.animatesplash.Activity.FavoriteActivity;
-import com.example.animatesplash.Activity.ShortVideoActivity;
 import com.example.animatesplash.Activity.WatchVideoActivity;
-import com.example.animatesplash.Database.DatabaseHelper;
 import com.example.animatesplash.Domains.Film;
 import com.example.animatesplash.R;
 

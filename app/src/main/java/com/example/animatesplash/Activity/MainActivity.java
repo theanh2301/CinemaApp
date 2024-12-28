@@ -1,15 +1,10 @@
 package com.example.animatesplash.Activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +16,6 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.animatesplash.Adapter.FilmGridAdapter;
 import com.example.animatesplash.Adapter.FilmListAdapter;
 import com.example.animatesplash.Adapter.SlidersAdapter;
 import com.example.animatesplash.Domains.Film;
@@ -59,26 +53,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.movieRecyclerView.setVisibility(View.GONE);
-
-        filmListAdapter = new FilmListAdapter(movieList);
-        binding.movieRecyclerView.setAdapter(filmListAdapter);
-
-        binding.searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchMovies(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        binding.micButton.setOnClickListener(v -> startVoiceInput());
-
         database = FirebaseDatabase.getInstance();
 
         initBanner();
@@ -90,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
         initHorrorMovie();
         initActionMovie();
         initVietNamMovie();
+
+        binding.movieRecyclerView.setVisibility(View.GONE);
+        filmListAdapter = new FilmListAdapter(movieList);
+        binding.movieRecyclerView.setAdapter(filmListAdapter);
+        binding.micButton.setOnClickListener(v -> startVoiceInput());
+        binding.searchButton.setOnClickListener(v -> {
+            String query = binding.searchEditText.getText().toString().trim();
+            searchMovies(query);
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setSelectedItemId(R.id.explorer);
@@ -143,51 +126,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    // Hàm tìm kiếm
     private void searchMovies(String query) {
         DatabaseReference databaseReference = database.getReference("Items");
 
-        // Nếu không có từ khóa, xóa danh sách và ẩn RecyclerView
-        if (query.trim().isEmpty()) {
+        if (query.isEmpty()) {
             movieList.clear();
             filmListAdapter.notifyDataSetChanged();
             binding.movieRecyclerView.setVisibility(View.GONE);
+            Toast.makeText(MainActivity.this, "Vui lòng nhập từ khóa tìm kiếm", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Thêm thời gian chờ (debounce) để giảm số lần gọi Firebase
-        new Handler().postDelayed(() -> {
-            databaseReference.orderByChild("Title")
-                    .startAt(query)
-                    .endAt(query + "\uf8ff")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            movieList.clear();
+        databaseReference.orderByChild("Title")
+                .startAt(query)
+                .endAt(query + "\uf8ff")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        movieList.clear();
 
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Film film = snapshot.getValue(Film.class);
-                                if (film != null) {
-                                    movieList.add(film);
-                                }
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Film film = snapshot.getValue(Film.class);
+                            if (film != null) {
+                                movieList.add(film);
                             }
-
-                            if (movieList.isEmpty()) {
-                                binding.movieRecyclerView.setVisibility(View.GONE);
-                                Toast.makeText(MainActivity.this, "Không tìm thấy phim nào khớp với từ khóa.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                binding.movieRecyclerView.setVisibility(View.VISIBLE);
-                            }
-                            filmListAdapter.notifyDataSetChanged();
                         }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Toast.makeText(MainActivity.this, "Lỗi khi lấy dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (movieList.isEmpty()) {
+                            binding.movieRecyclerView.setVisibility(View.GONE);
+                            Toast.makeText(MainActivity.this, "Không tìm thấy phim nào khớp với từ khóa.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.movieRecyclerView.setVisibility(View.VISIBLE);
                         }
-                    });
-        }, 500);
+                        filmListAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(MainActivity.this, "Lỗi khi lấy dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
+
 
     private void initUpcoming(){
         DatabaseReference myRef = database.getReference("Upcomming");
